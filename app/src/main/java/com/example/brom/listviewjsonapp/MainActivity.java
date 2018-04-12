@@ -1,9 +1,17 @@
 package com.example.brom.listviewjsonapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.constraint.solver.ArrayLinkedVariables;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +19,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 // Create a new class, Mountain, that can hold your JSON data
@@ -25,11 +36,38 @@ import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
+    private String[] mountainNames = {"Matterhorn","Mont Blanc","Denali"};
+    private String[] mountainLocations = {"Alps","Alps","Alaska"};
+    private String[] mountainHeights ={"4478", "4808", "6190"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 1. Create a ListView as in previous assignment
+        final List<String> mNames = new ArrayList<String>(Arrays.asList(mountainNames));
+
+        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item_textview, R.id.my_item_textview, mNames);
+
+        final ListView myListView = (ListView)findViewById(R.id.my_list);
+        myListView.setAdapter(adapter);
+
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Intent intent = new Intent(getApplicationContext(), MountainDetailsActivity.class);
+                Bundle info = new Bundle();
+                String name = mountainNames[pos];
+                String loc = mountainLocations[pos];
+                String height = mountainHeights[pos];
+                info.putString("INFO_NAME", name);
+                info.putString("INFO_LOC", loc);
+                info.putString("INFO_HEIGHT", height);
+                intent.putExtras(info);
+                myListView.getContext().startActivity(intent);
+            }
+        });
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -45,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 // Construct the URL for the Internet service
-                URL url = new URL("_ENTER_THE_URL_TO_THE_PHP_SERVICE_SERVING_JSON_HERE_");
+                URL url = new URL("http://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
 
                 // Create the request to the PHP-service, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
