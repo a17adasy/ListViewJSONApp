@@ -21,7 +21,7 @@ public class MountainDetailsActivity extends AppCompatActivity {
         Bundle info = getIntent().getExtras();
         String name = info.getString("INFO_NAME");
         String loc = info.getString("INFO_LOC");
-        String height = info.getString("INFO_HEIGHT");
+        int height = info.getInt("INFO_HEIGHT");
 
         TextView nameText = (TextView)findViewById(R.id.textView);
         TextView locText = (TextView)findViewById(R.id.textView2);
