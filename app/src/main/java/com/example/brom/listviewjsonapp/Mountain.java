@@ -8,13 +8,13 @@ public class Mountain {
     public String name;
     public String location;
     public int height;
-    public String url;
+    public String img;
 
-    Mountain(String name, int height, String location, String url){
+    Mountain(String name, int height, String location, String img){
         this.name = name;
         this.location = location;
         this.height = height;
-        this.url = url;
+        this.img = img;
     }
 
     public String getName(){
@@ -25,5 +25,11 @@ public class Mountain {
     }
     public int getHeight() {
         return height;
+    }
+    public String getImage(){
+        return img;
+    }
+    public String getText(){
+        return name + " is part of the " + location + " and is " + height + "m high";
     }
 }

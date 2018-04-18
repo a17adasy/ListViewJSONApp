@@ -65,18 +65,29 @@ public class MainActivity extends AppCompatActivity {
        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-            Intent intent = new Intent(getApplicationContext(), MountainDetailsActivity.class);
-            Bundle info = new Bundle();
-            String name = mountains.get(pos).getName();
-            String loc = mountains.get(pos).getLoc();
-            int height = mountains.get(pos).getHeight();
+                Context context = getApplicationContext();
+                CharSequence text = mountains.get(pos).getText();
+                int duration = Toast.LENGTH_LONG;
 
-            info.putString("INFO_NAME", name);
-            info.putString("INFO_LOC", loc);
-            info.putInt("INFO_HEIGHT", height);
-            intent.putExtras(info);
-            myListView.getContext().startActivity(intent);
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+
+                Intent intent = new Intent(getApplicationContext(), MountainDetailsActivity.class);
+                Bundle info = new Bundle();
+                String img = mountains.get(pos).getImage();
+                String name = mountains.get(pos).getName();
+                String loc = mountains.get(pos).getLoc();
+                int height = mountains.get(pos).getHeight();
+
+                info.putString("INFO_NAME", name);
+                info.putString("INFO_LOC", loc);
+                info.putInt("INFO_HEIGHT", height);
+                info.putString("INFO_IMG", img);
+                intent.putExtras(info);
+                myListView.getContext().startActivity(intent);
             }
+
+
         });
 
     }
@@ -182,12 +193,11 @@ public class MainActivity extends AppCompatActivity {
 
                     String auxdata = mountain.getString("auxdata");
                     JSONObject aux = new JSONObject(auxdata);
-                    String url = aux.getString("img");
+                    String img = aux.getString("img");
 
-                    mountains.add(new Mountain(name, height, location, url));
+                    mountains.add(new Mountain(name, height, location, img));
                     mountainNames.add(name);
                 }
-                Log.i("LOG", mountainNames.toString() );
 
             } catch (JSONException e) {
                 Log.e("brom", "ERROR: " + e);
